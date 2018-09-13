@@ -1,64 +1,144 @@
-// click listener for all buttons
-$(".animals").on("click", function() {
-  // variable storing the buttons
-  var topics = ["shark", "turtle", "eagle"];
-  var animal = $(this).attr("data-animal");
+$(document).ready(function(){
+
+    $('button').on('click', function() {
+        var animal = $(this).data('name');
+        var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + animal + "&api_key=dc6zaTOxFJmzC&limit=10";
+
+        $.ajax({
+            url: queryURL,
+            method: 'GET'
+        })
+            .done(function(response) {
 
 
-  // queryURL using the animal name
-  var queryURL =
-    "https://api.giphy.com/v1/gifs/search?q=" +
-    topics + "&api_key=dc6zaTOxFJmzC&limit=10";
-  // ajax request
-  $.ajax({
-    url: queryURL,
-    method: "GET"
-  })
+                console.log(response)
 
-    //  After data comes back from the request
-    .then(function(response) {
-      console.log(queryURL);
+                var results = response.data;
 
-      console.log(response);
-      // storing the data from the AJAX request in the results variable
-      var results = response.data;
+                for (var i = 0; i < results.length; i++) {
 
-      //  Looping through each result item
-      for (var i = 0; i < results.length; i++) {
+                    var animalDiv = $('<div/>');
 
-        //  Creating and storing a div tag
-        var animalDiv = $("<div>");
+                    var p =$('<p/>');
 
-        //  Creating a paragraph tag with the result item's rating
-        var p = $("<p>").text("Rating: " + results[i].rating);
-        document.write(p);
-        //  Creating and storing a div tag
-        var animalImage = $("<img>");
-        // setting the src attribute of the image to a property pulled off the result item
-        animalImage.attr("src", results[i].images.fixed_height.url);
+                    p.text(results[i].rating);
 
-        //  Appending the paragraph and image tag to the animalDiv
-        animalDiv.append(p);
-        animalDiv.append(animalImage);
+                    var animalImage = $('<img/>');
 
-        // prepending the animalDiv to the HTML page in the "#gifs-appear-here" div
-        console.log("animalDiv"+ animalDiv);
-        $("#gifs-appear-here").prepend(animalDiv);
-      }
+                    animalImage.addClass('anImg')
+
+                    animalImage.attr('src', results[i].images.fixed_height.url);
+
+                    animalImage.attr('data-still', results[i].images.fixed_height_still.url)
+
+                    animalImage.attr('data-animate', results[i].images.fixed_height.url)
+
+                    .attr('data-state', 'still');
+
+                    animalDiv.append(p);
+
+                    animalDiv.append(animalImage);
+
+                    animalDiv.prependTo($('#gifs'));
+                }
+
+                $('.anImg').on('click', function() {
+            
+                    var state = $(this).attr('data-state'); 
+                    console.log(this);
+
+                    if (state == 'still') {
+                    
+                    $(this).attr('src', $(this).data('animate'));
+                    
+                    $(this).attr('data-state', 'animate');
+
+                    } else {
+                            
+                    $(this).attr('src', $(this).data('still'));
+                    
+                    $(this).attr('data-state', 'still');
+                    }      
+                });
+            });
     });
-});
 
-$(".gif").on("click", function() {
-  // The attr jQuery method allows us to get or set the value of any attribute on our HTML element
-  var state = $(this).attr("data-state");
-  // If the clicked image's state is still, update its src attribute to what its data-animate value is.
-  // Then, set the image's data-state to animate
-  // Else set src to the data-still value
-  if (state === "still") {
-    $(this).attr("src", $(this).attr("data-animate"));
-    $(this).attr("data-state", "animate");
-  } else {
-    $(this).attr("src", $(this).attr("data-still"));
-    $(this).attr("data-state", "still");
-  }
+    var animals = [''];
+
+    
+        //This function "adds" the buttons 
+
+        // handles the event when clicked
+        $('#theButton').on('click', function(){
+            var animalButton = $("#gif-input").val();
+            //adds the new animal
+
+            var newButton = $("<button/>").addClass( "btn btn-info animal").attr('data-name',animalButton).html(animalButton).css({'margin': '5px'});
+            
+            $("#animalsbuttons").append(newButton);
+                console.log("Work");
+
+            queryURL = "https://api.giphy.com/v1/gifs/search?q=" + animalButton + "&api_key=dc6zaTOxFJmzC&limit=10";
+                console.log(animalButton);
+
+            $.ajax({
+            url: queryURL,
+            method: 'GET'
+            })
+
+            .done(function(response) {
+
+            var results = response.data;
+
+                for (var i = 0; i < results.length; i++) {
+
+                    var animalDiv = $('<div/>');
+
+                    var p =$('<p/>');
+
+                    p.text(results[i].rating);
+
+                    var animalImage = $('<img/>');
+
+                    animalImage.addClass('anImg')
+
+                    animalImage.attr('src', results[i].images.fixed_height_still.url);
+
+                    animalImage.attr('data-still', results[i].images.fixed_height_still.url)
+
+                    animalImage.attr('data-animate', results[i].images.fixed_height.url)
+
+                    .attr('data-state', 'still');
+
+                    animalDiv.append(p);
+
+                    animalDiv.append(animalImage);
+
+                    animalDiv.prependTo($('#gifs'));
+                }
+
+                $('.anImg').on('click', function() {
+            
+                    var state = $(this).attr('data-state'); 
+                    console.log(this);
+
+                    if (state == 'still') {
+                    
+                    $(this).attr('src', $(this).data('animate'));
+                    
+                    $(this).attr('data-state', 'animate');
+
+                    } else {
+                            
+                    $(this).attr('src', $(this).data('still'));
+                    
+                    $(this).attr('data-state', 'still');
+                    }      
+                });
+            });
+
+            $("#gif-input").val("");
+            return false;
+        })
+  
 });
