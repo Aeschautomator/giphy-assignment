@@ -2,7 +2,7 @@ $(document).ready(function(){
 
     $('button').on('click', function() {
         var animal = $(this).data('name');
-        var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + animal + "&api_key=dc6zaTOxFJmzC&limit=10";
+        var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + animal + "&api_key=dc6zaTOxFJmzC&limit=10&rating=g";
 
         $.ajax({
             url: queryURL,
@@ -14,7 +14,7 @@ $(document).ready(function(){
                 console.log(response)
 
                 var results = response.data;
-
+                $("#gifs").empty()
                 for (var i = 0; i < results.length; i++) {
 
                     var animalDiv = $('<div/>');
@@ -48,16 +48,16 @@ $(document).ready(function(){
                     console.log(this);
 
                     if (state == 'still') {
+                        $(this).attr('src', $(this).data('animate'));
                     
-                    $(this).attr('src', $(this).data('animate'));
-                    
-                    $(this).attr('data-state', 'animate');
+                        $(this).attr('data-state', 'animate');
+                   
 
                     } else {
-                            
-                    $(this).attr('src', $(this).data('still'));
+                        $(this).attr('src', $(this).data('still'));
                     
-                    $(this).attr('data-state', 'still');
+                        $(this).attr('data-state', 'still');
+                   
                     }      
                 });
             });
@@ -78,7 +78,7 @@ $(document).ready(function(){
             $("#animalsbuttons").append(newButton);
                 console.log("Work");
 
-            queryURL = "https://api.giphy.com/v1/gifs/search?q=&rating=" + animalButton + "&api_key=dc6zaTOxFJmzC&limit=10";
+            queryURL = "https://api.giphy.com/v1/gifs/search?q=&rating=g" + animalButton + "&api_key=dc6zaTOxFJmzC&limit=10";
                 console.log(animalButton);
 
             $.ajax({
