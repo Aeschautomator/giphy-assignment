@@ -78,7 +78,7 @@ $(document).ready(function(){
             $("#animalsbuttons").append(newButton);
                 console.log("Work");
 
-            queryURL = "https://api.giphy.com/v1/gifs/search?q=" + animalButton + "&api_key=dc6zaTOxFJmzC&limit=10";
+            queryURL = "https://api.giphy.com/v1/gifs/search?q=&rating=" + animalButton + "&api_key=dc6zaTOxFJmzC&limit=10";
                 console.log(animalButton);
 
             $.ajax({
